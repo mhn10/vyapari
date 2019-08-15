@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
+
+import Cards from "../components/card";
+
+
 const reducer = (state, action) => {
     const { type } = action;
 
@@ -46,13 +50,23 @@ const Home = ({ props }) => {
             <Wrapper>
                 <Nav>Navigation</Nav>
                 <Main>
-                   <NestedCards>test 1 </NestedCards>
-                   <NestedCards>test 2</NestedCards>
-                   <NestedCards>test 3</NestedCards>
-                   <NestedCards>test 4</NestedCards>
-                   <NestedCards>test 5</NestedCards>
-                    test main
-
+                   <Cards Name="aapl" /> 
+                   <Cards Name="VMW" />
+                   <Cards Name="Sales Force" />
+                   <Cards Name="Amazon" />
+                   <Cards Name="Microsoft" />
+                   <Cards Name="Cisco" />
+                   <Cards Name="Intel" />
+                   <Cards Name="Microsoft2" />
+                   <Cards Name="Microsoft3" />
+                   <Cards Name="Cisco" />
+                   <Cards Name="Intel" />
+                   <Cards Name="Microsoft2" />
+                   <Cards Name="Microsoft3" />
+                   <Cards Name="Cisco" />
+                   <Cards Name="Intel" />
+                   <Cards Name="Microsoft2" />
+                   <Cards Name="Microsoft3" />
                 </Main>
                 <Sidebar>{process.env.REACT_APP_PUBLIC_KEY}</Sidebar>
 
@@ -129,12 +143,14 @@ const Nav = styled.nav`
 `;
 
 const Main = styled.main`
- width: 100%;
+ width: 80%;
     height: 100%;
     grid-area: main;
     display : grid;
-    grid-gap: 10px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* grid-template-rows: repeat(4, 1fr); */
+    grid-auto-rows:minmax(280px, auto);;
     align-items: center;
     justify-content: center;
     justify-items: center;
@@ -148,10 +164,7 @@ const Sidebar = styled.div`
 const Footer = styled.footer`
     grid-area: footer;
 `;
-const NestedCards = styled.div`
-     font-weight: 200;
 
-`;
 
 const ImageWrapper = styled.div`
     box-sizing: border-box;
