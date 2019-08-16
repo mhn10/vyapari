@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
-
+import axios from "axios";
 
 import Cards from "../components/card";
-
+import homeContext from "../context/homeContext";
 
 const reducer = (state, action) => {
     const { type } = action;
@@ -13,8 +13,15 @@ const reducer = (state, action) => {
         case "changeState":
             return { ...state, step: action.value };
 
-        // case "setSearchText":
-        //     return { ...state, searchText: action.searchText };
+        // case "setStockSymbol":
+        //     return {
+        //         ...state,
+        //         stockState: {
+        //             symbol: action.symbol
+        //         }
+        //     };
+        case "setSymbol":
+            return { ...state, symbol: action.symbol };
 
         default:
             return state;
@@ -22,51 +29,54 @@ const reducer = (state, action) => {
 };
 
 const Home = ({ props }) => {
-    // const [homeState, dispatch] = React.useReducer(reducer, {
-    //     searchText: "",
-    //     step: 1
-    // });
+    const [homeState, dispatch] = React.useReducer(reducer, {
+        symbol: "",
+        step: 1
+    });
 
-    // useEffect(() => {
-    //     console.log("fetch data here");
-
-    //     axios
-    //         .get(`https://dog.ceo/api/breeds/list/all`)
-    //         .then(response => {
-    //             console.log("Response node details", response.data.message);
-    //             const { message } = response.data;
-    //             console.log("TCL: Dashboard -> message", message);
-    //             setBreeds(Object.keys(message));
-    //             setSearchList(Object.keys(message));
-    //         })
-    //         .catch(error => {
-    //             console.log("Error in useEffect nameAdd", error);
-    //             alert("No Data available, reload");
-    //         });
-    // }, []);
+    useEffect(() => {
+        console.log("fetch data here");
+        const getStocks = async () => {
+            try {
+                const ListPromise = axios.get(`${process.env.REACT_APP_URL}/stock/market/list/mostactive?token=${process.env.REACT_APP_IEXCLOUD_PUBLIC_KEY}`);
+                //const StocksPromise = axios.get(`${process.env.REACT_APP_URL}/stock/aapl/quote?filter=latestPrice,latestSource,open,week52High,week52Low&token=${process.env.REACT_APP_IEXCLOUD_PUBLIC_KEY}`);
+                const BatchPromise = axios.get(`${process.env.REACT_APP_URL}/stock/market/batch?types=chart,quote,news&symbols=aapl,amzn&token=${process.env.REACT_APP_IEXCLOUD_PUBLIC_KEY}`);
+                const [List, Stocks] = await Promise.all([
+                    ListPromise,
+                    BatchPromise
+                ]);
+                console.log("TCL: getStocks -> Stocks.data", Stocks.data);
+                console.log("TCL: getStocks -> List.data", List.data);
+            } catch (error) {
+                console.log("Error in useEffect nameAdd", error);
+                alert("No Data available, reload");
+            }
+        };
+        getStocks();
+    }, []);
 
     return (
         <>
             <Wrapper>
                 <Nav>Navigation</Nav>
                 <Main>
-                   <Cards Name="aapl" /> 
-                   <Cards Name="VMW" />
-                   <Cards Name="Sales Force" />
-                   <Cards Name="Amazon" />
-                   <Cards Name="Microsoft" />
-                   <Cards Name="Cisco" />
-                   <Cards Name="Intel" />
-                   <Cards Name="Microsoft2" />
-                   <Cards Name="Microsoft3" />
-                   <Cards Name="Cisco" />
-                   <Cards Name="Intel" />
-                   <Cards Name="Microsoft2" />
-                   <Cards Name="Microsoft3" />
-                   <Cards Name="Cisco" />
-                   <Cards Name="Intel" />
-                   <Cards Name="Microsoft2" />
-                   <Cards Name="Microsoft3" />
+                    <Cards Name="aapl" />
+                    <Cards Name="VMW" />
+                    <Cards Name="Sales Force" />
+                    <Cards Name="Amazon" />
+                    <Cards Name="Microsoft" />
+                    <Cards Name="Cisco" />
+                    <Cards Name="Intel" />
+                    <Cards Name="Microsoft2" />
+                    <Cards Name="Microsoft3" />
+                    <Cards Name="Cisco" />
+                    <Cards Name="Intel" />
+                    <Cards Name="Microsoft2" />
+                    <Cards Name="Microsoft3" />
+                    <Cards Name="Cisco" />
+                    <Cards Name="Intel" />
+                    <Cards Name="Microsoft2" />
+                    <Cards Name="Microsoft3" />
                 </Main>
                 <Sidebar>{process.env.REACT_APP_PUBLIC_KEY}</Sidebar>
 
@@ -87,7 +97,7 @@ const Label = styled.div`
 
 const Wrapper = styled.div`
     box-sizing: border-box;
-   
+
     /* margin-left: 2rem;
     margin-right: 2rem; */
     background-color: #fff;
@@ -103,10 +113,11 @@ const Wrapper = styled.div`
 
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 6fr 3fr 1fr;
-    grid-template-areas: "nav "
-                        "main "
-                        "sidebar"
-                        "footer";
+    grid-template-areas:
+        "nav "
+        "main "
+        "sidebar"
+        "footer";
 
     width: 100vw;
     height: 100vh;
@@ -115,9 +126,10 @@ const Wrapper = styled.div`
     @media only screen and (min-width: 900px) {
         grid-template-columns: 8fr 2fr;
         grid-template-rows: 1fr 9fr 1fr;
-        grid-template-areas: "nav nav"
-                             "main sidebar"
-                             "footer footer";
+        grid-template-areas:
+            "nav nav"
+            "main sidebar"
+            "footer footer";
         /* margin-left: 10%;
         margin-right: 10%; */
         /* margin-top: 60px; */
@@ -127,14 +139,13 @@ const Wrapper = styled.div`
     @media only screen and (min-width: 1400px) {
         grid-template-columns: 12fr 3fr;
         grid-template-rows: 1fr 13fr 1fr;
-        grid-template-areas: "nav nav"
-                             "main sidebar"
-                             "footer footer";
+        grid-template-areas:
+            "nav nav"
+            "main sidebar"
+            "footer footer";
 
-
-        
         width: 100vw;
-        height: 100vh; 
+        height: 100vh;
     }
 `;
 
@@ -143,18 +154,17 @@ const Nav = styled.nav`
 `;
 
 const Main = styled.main`
- width: 80%;
+    width: 80%;
     height: 100%;
     grid-area: main;
-    display : grid;
+    display: grid;
     grid-gap: 20px;
     grid-template-columns: 1fr 1fr 1fr;
     /* grid-template-rows: repeat(4, 1fr); */
-    grid-auto-rows:minmax(280px, auto);;
+    grid-auto-rows: minmax(280px, auto);
     align-items: center;
     justify-content: center;
     justify-items: center;
-
 `;
 
 const Sidebar = styled.div`
@@ -164,7 +174,6 @@ const Sidebar = styled.div`
 const Footer = styled.footer`
     grid-area: footer;
 `;
-
 
 const ImageWrapper = styled.div`
     box-sizing: border-box;
