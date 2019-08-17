@@ -6,6 +6,7 @@ import axios from "axios";
 import Cards from "../components/card";
 import homeContext from "../context/homeContext";
 
+
 const reducer = (state, action) => {
     const { type } = action;
 
@@ -34,6 +35,7 @@ const Home = ({ props }) => {
         step: 1
     });
 
+
     useEffect(() => {
         console.log("fetch data here");
         const getStocks = async () => {
@@ -53,8 +55,9 @@ const Home = ({ props }) => {
             }
         };
         getStocks();
+        
     }, []);
-
+   
     return (
         <>
             <Wrapper>
@@ -78,7 +81,8 @@ const Home = ({ props }) => {
                     <Cards Name="Microsoft2" />
                     <Cards Name="Microsoft3" />
                 </Main>
-                <Sidebar>{process.env.REACT_APP_PUBLIC_KEY}</Sidebar>
+                <Sidebar></Sidebar>
+                
 
                 <Footer>Footer</Footer>
             </Wrapper>
